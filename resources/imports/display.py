@@ -79,9 +79,9 @@ def image_of_maze(maze, tiles, image_tile, image_wall, image_corner, image_mud, 
             if vert and horiz or count == 1:                
                 screen.blit(image_corner, (offset_x + scale * i - scale/2, window_height - offset_y - scale * j - scale/2))
 
-def draw_pieces_of_cheese(pieces_of_cheese, image_cheese, offset_x, offset_y, scale, width, height, screen, window_height):
-    for (i,j) in pieces_of_cheese:
-        screen.blit(image_cheese, (offset_x + scale * i, window_height - offset_y - scale * (j+1)))
+def draw_batteries(batteries, image_battery, offset_x, offset_y, scale, width, height, screen, window_height):
+    for (i,j) in batteries:
+        screen.blit(image_battery, (offset_x + scale * i, window_height - offset_y - scale * (j+1)))
 
 def draw_players(player1_location, player2_location, image_python, image_rat, offset_x, offset_y, scale, width, height, screen, window_height):
     i, j = player1_location
@@ -139,7 +139,7 @@ def init_coords_and_images(width, height, player1_is_alive, player2_is_alive, wi
     scale_portrait_h = int(window_width / 6)
 
     image_background = pygame.transform.smoothscale(pygame.image.load("resources" + os.path.sep + "illustrations" + os.path.sep + "background.jpg"),(window_width, window_height))
-    image_cheese = pygame.transform.smoothscale(pygame.image.load("resources" + os.path.sep + "game_elements" + os.path.sep + "cheese.png"),(scale, scale))
+    image_battery = pygame.transform.smoothscale(pygame.image.load("resources" + os.path.sep + "game_elements" + os.path.sep + "battery.png"),(scale, scale))
     image_corner = pygame.transform.smoothscale(pygame.image.load("resources" + os.path.sep + "game_elements" + os.path.sep + "corner.png"),(scale, scale))
     image_moving_python = pygame.transform.smoothscale(pygame.image.load("resources" + os.path.sep + "game_elements" + os.path.sep + "movingPython.png"),(scale, scale))
     image_moving_rat = pygame.transform.smoothscale(pygame.image.load("resources" + os.path.sep + "game_elements/movingRat.png"),(scale, scale))
@@ -148,7 +148,7 @@ def init_coords_and_images(width, height, player1_is_alive, player2_is_alive, wi
     image_wall = pygame.transform.smoothscale(pygame.image.load("resources" + os.path.sep + "game_elements" + os.path.sep + "wall.png"),(scale, scale))
     image_mud = pygame.transform.smoothscale(pygame.image.load("resources" + os.path.sep + "game_elements" + os.path.sep + "mud.png"),(scale, scale))
     image_portrait_python = pygame.transform.smoothscale(pygame.image.load("resources" + os.path.sep + "illustrations" + os.path.sep + "python_left.png"),(scale_portrait_w, scale_portrait_h))
-    image_portrait_rat = pygame.transform.smoothscale(pygame.image.load("resources" + os.path.sep + "illustrations" + os.path.sep + "rat.png"),(scale_portrait_w, scale_portrait_h))
+    image_portrait_rat = pygame.transform.smoothscale(pygame.image.load("resources" + os.path.sep + "illustrations" + os.path.sep + "Mach_E_Front.png"),(scale_portrait_w, scale_portrait_h))
     image_tile = []
     for i in range(10):
         image_tile.append(pygame.transform.smoothscale(pygame.image.load("resources" + os.path.sep + "game_elements" + os.path.sep + "tile"+str(i+1)+".png"),(scale, scale)))
@@ -169,7 +169,7 @@ def init_coords_and_images(width, height, player1_is_alive, player2_is_alive, wi
             image_python.set_alpha(0)
             image_moving_python = image_moving_python.convert()
             image_moving_python.set_alpha(0)
-    return scale, offset_x, offset_y, image_background, image_cheese, image_corner, image_moving_python, image_moving_rat, image_python, image_rat, image_wall, image_mud, image_portrait_python, image_portrait_rat, tiles, image_tile
+    return scale, offset_x, offset_y, image_background, image_battery, image_corner, image_moving_python, image_moving_rat, image_python, image_rat, image_wall, image_mud, image_portrait_python, image_portrait_rat, tiles, image_tile
 
 def build_background(screen, maze, tiles, image_background, image_tile, image_wall, image_corner, image_mud, offset_x, offset_y, width, height, window_width, window_height, image_portrait_rat, image_portrait_python, scale, player1_is_alive, player2_is_alive):
     global font_sizes
@@ -187,7 +187,7 @@ def build_background(screen, maze, tiles, image_background, image_tile, image_wa
     return maze_image
 
     
-def run(maze, width, height, q, q_render_in, q_quit, p1name, p2name, q1_out, q2_out, is_human_rat, is_human_python, q_info, pieces_of_cheese, player1_location, player2_location, player1_is_alive, player2_is_alive, screen, infoObject):
+def run(maze, width, height, q, q_render_in, q_quit, p1name, p2name, q1_out, q2_out, is_human_rat, is_human_python, q_info, batteries, player1_location, player2_location, player1_is_alive, player2_is_alive, screen, infoObject):
     global args
 
     debug("Starting rendering",2)
@@ -196,7 +196,7 @@ def run(maze, width, height, q, q_render_in, q_quit, p1name, p2name, q1_out, q2_
     else:
         window_width, window_height = pygame.display.get_surface().get_size()
     turn_time = args.turn_time
-    scale, offset_x, offset_y, image_background, image_cheese, image_corner, image_moving_python, image_moving_rat, image_python, image_rat, image_wall, image_mud, image_portrait_python, image_portrait_rat, tiles, image_tile = init_coords_and_images(width, height, player1_is_alive, player2_is_alive, window_width, window_height)
+    scale, offset_x, offset_y, image_background, image_battery, image_corner, image_moving_python, image_moving_rat, image_python, image_rat, image_wall, image_mud, image_portrait_python, image_portrait_rat, tiles, image_tile = init_coords_and_images(width, height, player1_is_alive, player2_is_alive, window_width, window_height)
 
     debug("Defining constants",2)
     d = 10000000
@@ -251,7 +251,7 @@ def run(maze, width, height, q, q_render_in, q_quit, p1name, p2name, q1_out, q2_
                         if event.type == pygame.VIDEORESIZE:
                             window_width, window_height = event.w, event.h
                             #screen = pygame.display.set_mode((window_width, window_height),pygame.RESIZABLE)
-                            scale, offset_x, offset_y, image_background, image_cheese, image_corner, image_moving_python, image_moving_rat, image_python, image_rat, image_wall, image_mud, image_portrait_python, image_portrait_rat, tiles, image_tile = init_coords_and_images(width, height, player1_is_alive, player2_is_alive, window_width, window_height)
+                            scale, offset_x, offset_y, image_background, image_battery, image_corner, image_moving_python, image_moving_rat, image_python, image_rat, image_wall, image_mud, image_portrait_python, image_portrait_rat, tiles, image_tile = init_coords_and_images(width, height, player1_is_alive, player2_is_alive, window_width, window_height)
                             maze_image = build_background(screen, maze, tiles, image_background, image_tile, image_wall, image_corner, image_mud, offset_x, offset_y, width, height, window_width, window_height, image_portrait_rat, image_portrait_python, scale, player1_is_alive, player2_is_alive)
 
                 if event.type == pygame.KEYDOWN and (is_human_rat or is_human_python):                
@@ -300,12 +300,12 @@ def run(maze, width, height, q, q_render_in, q_quit, p1name, p2name, q1_out, q2_
         debug("Looking for updates from core program",2)
         if (args.desactivate_animations and not(q.empty())) or not(args.desactivate_animations):
             if args.desactivate_animations:
-                pieces_of_cheese, nnew_player1_location, nnew_player2_location, score1, score2, moves1, moves2, miss1, miss2, stuck1, stuck2 = q.get()
+                batteries, nnew_player1_location, nnew_player2_location, score1, score2, moves1, moves2, miss1, miss2, stuck1, stuck2 = q.get()
                 player1_location = nnew_player1_location
                 player2_location = nnew_player2_location
             else:
                 while not(q.empty()):
-                    pieces_of_cheese, nnew_player1_location, nnew_player2_location, score1, score2, moves1, moves2, miss1, miss2, stuck1, stuck2 = q.get()
+                    batteries, nnew_player1_location, nnew_player2_location, score1, score2, moves1, moves2, miss1, miss2, stuck1, stuck2 = q.get()
                     if not(args.desactivate_animations):
                         if nnew_player1_location != new_player1_location:
                             time_to_go1 = pygame.time.get_ticks() + turn_time * maze[new_player1_location][nnew_player1_location]
@@ -319,7 +319,7 @@ def run(maze, width, height, q, q_render_in, q_quit, p1name, p2name, q1_out, q2_
             debug("Starting draw",2)
             screen.fill((57, 57, 64))
             screen.blit(maze_image, (0, 0))
-            draw_pieces_of_cheese(pieces_of_cheese, image_cheese, offset_x, offset_y, scale, width, height, screen, window_height)
+            draw_batteries(batteries, image_battery, offset_x, offset_y, scale, width, height, screen, window_height)
 
             if not(args.desactivate_animations):
                 if time_to_go1 <= pygame.time.get_ticks() or player1_location == new_player1_location:

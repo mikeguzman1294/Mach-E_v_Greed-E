@@ -19,7 +19,7 @@ Please check out all the options offered by the pyrat software, by running :
 
 <pre>python pyrat.py -h</pre>
 
-Importantly, there are options to change the size of the map, the number of cheese, which will be very useful later to benchmark your own solutions. 
+Importantly, there are options to change the size of the map, the number of battery, which will be very useful later to benchmark your own solutions. 
 
 In the supervised and unsupervised projects, we are going to look at plays between two greedy algorithms. Generating 1000 such games while saving data is easily obtained with PyRat. 
 
